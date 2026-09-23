@@ -37,7 +37,7 @@ const INITIAL_GALLERY_DATA = [
     title: 'Abhishek Kumar',
     category: 'members',
     isCaptain: false,
-    role: 'Student Member',
+    role: 'Vice-Captain',
     roll: '06',
     course: 'BCA',
     session: '2026–2029',
@@ -45,7 +45,22 @@ const INITIAL_GALLERY_DATA = [
     aspectRatio: 'aspect-portrait',
     isHD: false,
     isLocked: false,
-    description: 'Innovator & Core Technical Contributor at Vestor Innovators.'
+    description: 'Vice-Captain & Core Technical Contributor at Vestor Innovators.'
+  },
+  {
+    id: 'member-dhruv',
+    title: 'Dhruv Raj',
+    category: 'members',
+    isCaptain: false,
+    role: 'Team Member',
+    roll: '95',
+    course: 'BCA',
+    session: '2026–2029',
+    src: './images/members/dhruv-raj-95-bca-26-29.jpeg',
+    aspectRatio: 'aspect-portrait',
+    isHD: true,
+    isLocked: false,
+    description: 'Full-stack software developer and systems innovator at Vestor Innovators.'
   },
   {
     id: 'member-radha',
@@ -257,6 +272,21 @@ const INITIAL_GALLERY_DATA = [
     isLocked: false,
     description: 'Database management and IT security student.'
   },
+  {
+    id: 'member-nikita',
+    title: 'Nikita Kumari',
+    category: 'members',
+    isCaptain: false,
+    role: 'Team Member',
+    roll: '72',
+    course: 'BCA',
+    session: '2025–2028',
+    src: './images/members/nikita-kumari-72-bca-25-28.jpeg',
+    aspectRatio: 'aspect-portrait',
+    isHD: true,
+    isLocked: false,
+    description: 'Applications engineering, quality testing, and team coordination.'
+  },
 
   // --- TROPHIES & ACHIEVEMENTS ---
   {
@@ -355,7 +385,7 @@ const INITIAL_GALLERY_DATA = [
     src: './images/member-9-trophy.jpg',
     aspectRatio: 'aspect-portrait',
     isHD: false,
-    isLocked: false,
+    isLocked: true,
     description: 'Recognizing remarkable dedication from new league recruits.'
   },
   {
@@ -366,7 +396,7 @@ const INITIAL_GALLERY_DATA = [
     src: './images/member-10-trophy.jpg',
     aspectRatio: 'aspect-portrait',
     isHD: false,
-    isLocked: false,
+    isLocked: true,
     description: 'Decisive tournament victory trophy held by Vestor Innovators.'
   },
   {
@@ -524,6 +554,19 @@ const INITIAL_GALLERY_DATA = [
     isHD: false,
     isLocked: false,
     description: 'Informal innovation team moment between competition rounds.'
+  },
+  {
+    id: 'video-spotlight-01',
+    title: 'Campus Video Spotlight',
+    category: 'events',
+    isVideo: true,
+    duration: '0:31',
+    role: 'Video Spotlight',
+    src: './videos/video-1.mp4',
+    aspectRatio: 'aspect-wide',
+    isHD: true,
+    isLocked: false,
+    description: 'Dynamic campus video showcase highlighting live teamwork and innovations.'
   }
 ];
 
@@ -655,11 +698,377 @@ const DOM = {
 };
 
 // --------------------------------------------------------------------------
+// 4b. Memories & Highlights Reel Engine (Google Photos Inspired)
+// --------------------------------------------------------------------------
+const HIGHLIGHTS_DATA = [
+  {
+    id: 'hl-quiz',
+    tag: '1 year since...',
+    title: 'English Quiz Championship',
+    desc: 'Vestor Innovators securing 1st place in the prestigious university English Quiz Championship.',
+    type: 'image',
+    src: './images/winner_english_quiz_competition.jpg'
+  },
+  {
+    id: 'hl-video',
+    tag: 'Video spotlight',
+    title: 'Campus Video Spotlight',
+    desc: 'Dynamic video highlights and live moments with the Vestor Innovators team.',
+    type: 'video',
+    src: './videos/video-1.mp4'
+  },
+  {
+    id: 'hl-victory',
+    tag: 'Championship Victory',
+    title: 'Grand Victory Celebration',
+    desc: 'Team victory moment celebrating outstanding collaborative achievement and trophies.',
+    type: 'image',
+    src: './images/group-winning.jpg'
+  },
+  {
+    id: 'hl-friday',
+    tag: 'A glimpse of Friday',
+    title: 'Project Brainstorming Lab',
+    desc: 'Late-night architecture whiteboard session and competitive hackathon sprint.',
+    type: 'image',
+    src: './images/IMG-20260808-WA0246.jpg'
+  },
+  {
+    id: 'hl-saturday',
+    tag: 'A glimpse of Saturday',
+    title: 'Grand League Showcase',
+    desc: 'Auditorium keynote and prototype live demonstrations to faculty and students.',
+    type: 'image',
+    src: './images/IMG-20260823-WA0027.jpg'
+  },
+  {
+    id: 'hl-recent',
+    tag: 'A few days ago',
+    title: 'Mentorship Session with Faculty',
+    desc: 'Strategic consultation and project guidance with respected faculty mentors.',
+    type: 'image',
+    src: './images/group with teacher..jpg'
+  },
+  {
+    id: 'hl-stage',
+    tag: 'Screen Spotlight',
+    title: 'Innovators on Main Stage Screen',
+    desc: 'Campus auditorium screen broadcast honoring Vestor Innovators milestones.',
+    type: 'image',
+    src: './images/winners_on_screen.jpg'
+  }
+];
+
+// Ambient Audio Soundscape Engine (Web Audio API)
+const AmbientAudio = {
+  ctx: null,
+  isPlaying: false,
+  gainNode: null,
+  activeOscillators: [],
+  timer: null,
+
+  init() {
+    if (!this.ctx) {
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      if (AudioCtx) this.ctx = new AudioCtx();
+    }
+  },
+
+  start() {
+    this.init();
+    if (!this.ctx) return;
+    if (this.ctx.state === 'suspended') {
+      this.ctx.resume();
+    }
+    if (this.isPlaying) return;
+
+    this.gainNode = this.ctx.createGain();
+    this.gainNode.gain.setValueAtTime(0.001, this.ctx.currentTime);
+    this.gainNode.gain.exponentialRampToValueAtTime(0.18, this.ctx.currentTime + 2.5);
+    this.gainNode.connect(this.ctx.destination);
+
+    // Warm peaceful ambient chord sequence (C - G - Am - F)
+    const chords = [
+      [261.63, 329.63, 392.00, 523.25], // C Major
+      [196.00, 246.94, 293.66, 392.00], // G Major
+      [220.00, 261.63, 329.63, 440.00], // A Minor
+      [174.61, 220.00, 261.63, 349.23]  // F Major
+    ];
+    let chordIdx = 0;
+
+    const playChord = () => {
+      if (!this.isPlaying) return;
+      this.activeOscillators.forEach(osc => {
+        try {
+          osc.gain.gain.exponentialRampToValueAtTime(0.0001, this.ctx.currentTime + 1.2);
+          setTimeout(() => osc.osc.stop(), 1300);
+        } catch(e) {}
+      });
+      this.activeOscillators = [];
+
+      const currentChord = chords[chordIdx % chords.length];
+      chordIdx++;
+
+      currentChord.forEach(freq => {
+        const osc = this.ctx.createOscillator();
+        const oscGain = this.ctx.createGain();
+        const filter = this.ctx.createBiquadFilter();
+
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
+
+        filter.type = 'lowpass';
+        filter.frequency.setValueAtTime(650, this.ctx.currentTime);
+
+        oscGain.gain.setValueAtTime(0.001, this.ctx.currentTime);
+        oscGain.gain.exponentialRampToValueAtTime(0.06, this.ctx.currentTime + 1.2);
+
+        osc.connect(filter);
+        filter.connect(oscGain);
+        oscGain.connect(this.gainNode);
+
+        osc.start();
+        this.activeOscillators.push({ osc, gain: oscGain });
+      });
+
+      this.timer = setTimeout(playChord, 5200);
+    };
+
+    this.isPlaying = true;
+    playChord();
+    this.updateUI(true);
+  },
+
+  stop() {
+    if (!this.isPlaying) return;
+    this.isPlaying = false;
+    if (this.timer) clearTimeout(this.timer);
+    if (this.gainNode && this.ctx) {
+      try {
+        this.gainNode.gain.exponentialRampToValueAtTime(0.0001, this.ctx.currentTime + 0.8);
+      } catch(e) {}
+    }
+    setTimeout(() => {
+      this.activeOscillators.forEach(o => {
+        try { o.osc.stop(); } catch(e) {}
+      });
+      this.activeOscillators = [];
+    }, 900);
+    this.updateUI(false);
+  },
+
+  toggle() {
+    if (this.isPlaying) {
+      this.stop();
+      showToast('Ambient sound muted');
+    } else {
+      this.start();
+      showToast('Ambient relaxing soundtrack active');
+    }
+  },
+
+  updateUI(active) {
+    const audioBtn = document.getElementById('ambientAudioBtn');
+    const audioIcon = document.getElementById('audioIcon');
+    const audioText = document.getElementById('audioStatusText');
+    const storyAudioIcon = document.getElementById('storyAudioIcon');
+    if (audioBtn) audioBtn.classList.toggle('active', active);
+    if (audioIcon) audioIcon.textContent = active ? 'volume_up' : 'volume_off';
+    if (audioText) audioText.textContent = active ? 'Sound Playing' : 'Ambient Sound';
+    if (storyAudioIcon) storyAudioIcon.textContent = active ? 'volume_up' : 'volume_off';
+  }
+};
+
+// Story Viewer Engine (Memories Auto-Advancing Player)
+const StoryViewer = {
+  isOpen: false,
+  currentIndex: 0,
+  timer: null,
+  startTime: 0,
+  duration: 4500,
+  isPaused: false,
+  remainingTime: 4500,
+
+  open(index = 0) {
+    this.isOpen = true;
+    this.currentIndex = index;
+    const modal = document.getElementById('storyViewerModal');
+    if (modal) modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+    this.buildProgressBars();
+    this.showSlide(index);
+  },
+
+  close() {
+    this.isOpen = false;
+    if (this.timer) clearTimeout(this.timer);
+    const modal = document.getElementById('storyViewerModal');
+    if (modal) modal.classList.remove('active');
+    document.body.style.overflow = '';
+    const storyVideo = document.getElementById('storyVideo');
+    if (storyVideo) {
+      storyVideo.pause();
+      storyVideo.src = '';
+    }
+  },
+
+  buildProgressBars() {
+    const container = document.getElementById('storyProgressContainer');
+    if (!container) return;
+    container.innerHTML = HIGHLIGHTS_DATA.map((_, i) => `
+      <div class="story-progress-segment" id="storySeg-${i}">
+        <div class="story-progress-fill" id="storyFill-${i}"></div>
+      </div>
+    `).join('');
+  },
+
+  showSlide(index) {
+    if (index < 0 || index >= HIGHLIGHTS_DATA.length) {
+      this.close();
+      return;
+    }
+    this.currentIndex = index;
+    if (this.timer) clearTimeout(this.timer);
+
+    const item = HIGHLIGHTS_DATA[index];
+    const storyImage = document.getElementById('storyImage');
+    const storyVideo = document.getElementById('storyVideo');
+    const storyTag = document.getElementById('storyTag');
+    const storyTitle = document.getElementById('storyTitle');
+    const storyCaptionTitle = document.getElementById('storyCaptionTitle');
+    const storyCaptionDesc = document.getElementById('storyCaptionDesc');
+
+    if (storyTag) storyTag.textContent = item.tag;
+    if (storyTitle) storyTitle.textContent = item.title;
+    if (storyCaptionTitle) storyCaptionTitle.textContent = item.title;
+    if (storyCaptionDesc) storyCaptionDesc.textContent = item.desc;
+
+    // Update progress bars
+    for (let i = 0; i < HIGHLIGHTS_DATA.length; i++) {
+      const seg = document.getElementById(`storySeg-${i}`);
+      const fill = document.getElementById(`storyFill-${i}`);
+      if (!seg || !fill) continue;
+      if (i < index) {
+        seg.classList.add('completed');
+        fill.style.width = '100%';
+        fill.style.transition = 'none';
+      } else if (i === index) {
+        seg.classList.remove('completed');
+        fill.style.width = '0%';
+        fill.style.transition = 'none';
+        requestAnimationFrame(() => {
+          fill.style.transition = `width ${item.type === 'video' ? '8s' : '4.5s'} linear`;
+          fill.style.width = '100%';
+        });
+      } else {
+        seg.classList.remove('completed');
+        fill.style.width = '0%';
+        fill.style.transition = 'none';
+      }
+    }
+
+    if (item.type === 'video') {
+      if (storyImage) storyImage.style.display = 'none';
+      if (storyVideo) {
+        storyVideo.style.display = 'block';
+        storyVideo.src = item.src;
+        storyVideo.currentTime = 0;
+        storyVideo.play().catch(() => {});
+      }
+      this.duration = 8000;
+    } else {
+      if (storyVideo) {
+        storyVideo.pause();
+        storyVideo.style.display = 'none';
+      }
+      if (storyImage) {
+        storyImage.style.display = 'block';
+        storyImage.src = item.src;
+      }
+      this.duration = 4500;
+    }
+
+    this.startTime = Date.now();
+    this.remainingTime = this.duration;
+    this.isPaused = false;
+    const playIcon = document.getElementById('storyPlayPauseIcon');
+    if (playIcon) playIcon.textContent = 'pause';
+    this.timer = setTimeout(() => this.next(), this.duration);
+  },
+
+  next() {
+    if (this.currentIndex + 1 < HIGHLIGHTS_DATA.length) {
+      this.showSlide(this.currentIndex + 1);
+    } else {
+      this.close();
+    }
+  },
+
+  prev() {
+    if (this.currentIndex > 0) {
+      this.showSlide(this.currentIndex - 1);
+    } else {
+      this.showSlide(0);
+    }
+  },
+
+  togglePlayPause() {
+    const icon = document.getElementById('storyPlayPauseIcon');
+    if (this.isPaused) {
+      this.isPaused = false;
+      if (icon) icon.textContent = 'pause';
+      this.startTime = Date.now();
+      this.timer = setTimeout(() => this.next(), this.remainingTime);
+      const storyVideo = document.getElementById('storyVideo');
+      if (storyVideo && storyVideo.style.display !== 'none') storyVideo.play().catch(() => {});
+    } else {
+      this.isPaused = true;
+      if (icon) icon.textContent = 'play_arrow';
+      if (this.timer) clearTimeout(this.timer);
+      this.remainingTime -= (Date.now() - this.startTime);
+      const storyVideo = document.getElementById('storyVideo');
+      if (storyVideo && storyVideo.style.display !== 'none') storyVideo.pause();
+    }
+  }
+};
+
+function renderHighlights() {
+  const track = document.getElementById('highlightsTrack');
+  if (!track) return;
+
+  track.innerHTML = HIGHLIGHTS_DATA.map((item, index) => {
+    const mediaTag = item.type === 'video'
+      ? `<video src="${item.src}#t=0.2" preload="metadata" muted playsinline></video>
+         <div class="highlight-play-badge"><span class="material-symbols-outlined" style="font-size: 14px;">play_arrow</span></div>`
+      : `<img src="${item.src}" alt="${item.title}" loading="lazy">`;
+
+    return `
+      <div class="highlight-card" data-index="${index}" role="button" tabindex="0" title="${item.title}">
+        ${mediaTag}
+        <div class="highlight-card-overlay">
+          <span class="highlight-card-tag">${item.tag}</span>
+          <span class="highlight-card-title">${item.title}</span>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  // Attach click listeners to highlight cards
+  track.querySelectorAll('.highlight-card').forEach(card => {
+    card.addEventListener('click', () => {
+      const idx = parseInt(card.getAttribute('data-index'), 10);
+      StoryViewer.open(idx);
+    });
+  });
+}
+
+// --------------------------------------------------------------------------
 // 5. Initialization
 // --------------------------------------------------------------------------
 function init() {
   loadSavedPreferences();
   bindEventListeners();
+  renderHighlights();
   renderGallery();
   updateMetrics();
 }
@@ -687,10 +1096,22 @@ function loadSavedPreferences() {
 
   // 3. Locked IDs
   try {
-    const savedLockedIds = JSON.parse(localStorage.getItem('vi_locked_ids') || '[]');
-    AppState.lockedIds = new Set(savedLockedIds);
+    const defaultLockedIds = INITIAL_GALLERY_DATA.filter(i => i.isLocked).map(i => i.id);
+    const storedLocked = localStorage.getItem('vi_locked_ids');
+    const migrated = localStorage.getItem('vi_vault_defaults_v2');
+
+    if (storedLocked !== null && migrated === 'true') {
+      AppState.lockedIds = new Set(JSON.parse(storedLocked));
+    } else {
+      // First load or default migration: ensure default locked trophies are locked
+      const existing = storedLocked ? JSON.parse(storedLocked) : [];
+      AppState.lockedIds = new Set([...existing, ...defaultLockedIds]);
+      localStorage.setItem('vi_locked_ids', JSON.stringify([...AppState.lockedIds]));
+      localStorage.setItem('vi_vault_defaults_v2', 'true');
+    }
   } catch (e) {
-    AppState.lockedIds = new Set();
+    const defaultLockedIds = INITIAL_GALLERY_DATA.filter(i => i.isLocked).map(i => i.id);
+    AppState.lockedIds = new Set(defaultLockedIds);
   }
 
   // 4. Uploaded items
@@ -701,21 +1122,20 @@ function loadSavedPreferences() {
     AppState.items = [...INITIAL_GALLERY_DATA];
   }
 
-  // 5. View Mode
-  const savedView = localStorage.getItem('vi_view_mode') || 'grid';
+  // 5. View Mode (Default to smart Google Photos layout)
+  const savedView = localStorage.getItem('vi_view_mode') || 'smart';
   AppState.viewMode = savedView;
   DOM.viewButtons.forEach(b => {
     b.classList.toggle('active', b.getAttribute('data-view') === savedView);
   });
   DOM.galleryGrid.className = 'gallery-grid';
+  if (savedView === 'smart') DOM.galleryGrid.classList.add('view-smart');
   if (savedView === 'bento') DOM.galleryGrid.classList.add('view-bento');
   if (savedView === 'compact') DOM.galleryGrid.classList.add('view-compact');
 
   // Sync locked status from saved set
   AppState.items.forEach(item => {
-    if (AppState.lockedIds.has(item.id)) {
-      item.isLocked = true;
-    }
+    item.isLocked = AppState.lockedIds.has(item.id);
   });
 
   // Check if session was already authenticated
@@ -826,8 +1246,12 @@ function renderGallery() {
     let memberBadge = '';
     if (item.isCaptain) {
       memberBadge = `<span class="badge-pill badge-captain">★ CAPTAIN</span>`;
+    } else if (item.id === 'member-abhishek' || item.role === 'Vice-Captain') {
+      memberBadge = `<span class="badge-pill badge-member">VICE-CAPTAIN</span>`;
     } else if (item.isLocked) {
       memberBadge = `<span class="badge-pill badge-locked">SEALED</span>`;
+    } else if (item.isVideo) {
+      memberBadge = `<span class="badge-pill badge-group">VIDEO</span>`;
     } else if (item.category === 'members') {
       memberBadge = `<span class="badge-pill badge-member">MEMBER</span>`;
     } else if (item.category === 'trophies') {
@@ -858,8 +1282,29 @@ function renderGallery() {
       `;
     }
 
+    // Calculate aspect ratio float for Google Photos justified flex packing
+    let aspectVal = 0.7; // default portrait
+    if (item.aspectRatio === 'aspect-wide') aspectVal = 1.77;
+    else if (item.aspectRatio === 'aspect-square') aspectVal = 1.0;
+    else if (item.aspectRatio === 'aspect-portrait') aspectVal = 0.56;
+
+    const mediaMarkup = item.isVideo ? `
+      <video class="card-video" src="${item.src}#t=0.2" preload="metadata" muted playsinline loop onmouseenter="this.play()" onmouseleave="this.pause()"></video>
+      <div class="video-play-indicator">
+        <span class="material-symbols-outlined" style="font-size: 14px;">play_arrow</span>
+        <span>${item.duration || '0:31'}</span>
+      </div>
+    ` : `
+      <img class="card-image" 
+           src="${item.src}" 
+           alt="${item.title}" 
+           loading="lazy"
+           onerror="this.onerror=null; this.src='./images/logo.png';">
+    `;
+
     return `
       <div class="gallery-card glass-card ${item.aspectRatio || 'aspect-portrait'}" 
+           style="--aspect: ${aspectVal};"
            data-id="${item.id}" 
            data-index="${index}"
            tabindex="0"
@@ -867,11 +1312,7 @@ function renderGallery() {
            aria-label="View ${item.title}">
         
         <div class="card-media-wrapper">
-          <img class="card-image" 
-               src="${item.src}" 
-               alt="${item.title}" 
-               loading="lazy"
-               onerror="this.onerror=null; this.src='./images/logo.png';">
+          ${mediaMarkup}
           <div class="card-overlay"></div>
           <div class="card-sheen"></div>
         </div>
@@ -1043,13 +1484,20 @@ function setActiveFilter(filterName) {
 /**
  * Opens Security Authentication Modal
  */
-function promptSecurityAuth(desc, onSuccess) {
+function promptSecurityAuth(desc, onSuccess, title) {
   AppState.pendingAuthAction = onSuccess;
-  if (DOM.securityModalDesc) DOM.securityModalDesc.textContent = desc || 'Enter vault password (innovators)';
+  if (DOM.securityModalTitle) {
+    DOM.securityModalTitle.textContent = title || 'Private Vault Authentication';
+  }
+  if (DOM.securityModalDesc) {
+    DOM.securityModalDesc.textContent = desc || 'Enter vault password (innovators)';
+  }
   if (DOM.securityErrorMsg) DOM.securityErrorMsg.textContent = '';
   if (DOM.securityPasswordInput) DOM.securityPasswordInput.value = '';
   DOM.securityModal.classList.add('active');
-  if (DOM.securityPasswordInput) DOM.securityPasswordInput.focus();
+  if (DOM.securityPasswordInput) {
+    setTimeout(() => DOM.securityPasswordInput.focus(), 60);
+  }
 }
 
 function closeSecurityModal() {
@@ -1057,6 +1505,12 @@ function closeSecurityModal() {
   AppState.pendingAuthAction = null;
   if (DOM.securityPasswordInput) DOM.securityPasswordInput.value = '';
   if (DOM.securityErrorMsg) DOM.securityErrorMsg.textContent = '';
+  if (DOM.securityModalTitle) {
+    DOM.securityModalTitle.textContent = 'Private Vault Authentication';
+  }
+  if (DOM.securityModalDesc) {
+    DOM.securityModalDesc.textContent = 'Enter the enclave security key to access or seal private vault assets.';
+  }
 }
 
 function verifySecurityPassword(e) {
@@ -1067,11 +1521,11 @@ function verifySecurityPassword(e) {
     AppState.isVaultAuthenticated = true;
     sessionStorage.setItem('vi_vault_unlocked', 'true');
     updateLockedVaultIcon();
+    const action = AppState.pendingAuthAction;
     closeSecurityModal();
 
-    if (typeof AppState.pendingAuthAction === 'function') {
-      AppState.pendingAuthAction();
-      AppState.pendingAuthAction = null;
+    if (typeof action === 'function') {
+      action();
     }
   } else {
     if (DOM.securityErrorMsg) {
@@ -1084,17 +1538,34 @@ function verifySecurityPassword(e) {
 
 /**
  * Toggles an image's locked state (moving between public gallery and locked vault)
+ * NOTE: Whenever a user tries to move photos OUT of the vault, they are ALWAYS asked for the password!
  */
 window.handleCardLockToggle = function(id) {
   const item = AppState.items.find(i => i.id === id);
   if (!item) return;
 
-  if (!AppState.isVaultAuthenticated) {
-    promptSecurityAuth(`Enter password to ${item.isLocked ? 'unlock' : 'lock'} this asset`, () => {
-      toggleItemLock(item);
-    });
+  if (item.isLocked) {
+    // MOVING OUT OF THE VAULT: Always prompt for password confirmation!
+    promptSecurityAuth(
+      `Enter vault password to unlock "${item.title}" and move it to the public gallery:`,
+      () => {
+        toggleItemLock(item);
+      },
+      'Unlock Vault Asset'
+    );
   } else {
-    toggleItemLock(item);
+    // MOVING INTO THE VAULT:
+    if (!AppState.isVaultAuthenticated) {
+      promptSecurityAuth(
+        `Enter password to lock "${item.title}" into Private Vault:`,
+        () => {
+          toggleItemLock(item);
+        },
+        'Lock Asset in Vault'
+      );
+    } else {
+      toggleItemLock(item);
+    }
   }
 };
 
@@ -1106,16 +1577,27 @@ function toggleItemLock(item) {
     showToast(`"${item.title}" sealed into Locked Vault 🔒`);
   } else {
     AppState.lockedIds.delete(item.id);
-    showToast(`"${item.title}" restored to Public Gallery 🔓`);
+    showToast(`"${item.title}" moved out of Vault & restored to Public Gallery 🔓`);
   }
 
   // Persist locked IDs
   localStorage.setItem('vi_locked_ids', JSON.stringify([...AppState.lockedIds]));
 
+  // Also update vi_uploads if this was an uploaded item so its isLocked field is updated
+  try {
+    const existingUploads = JSON.parse(localStorage.getItem('vi_uploads') || '[]');
+    const uploadItem = existingUploads.find(u => u.id === item.id);
+    if (uploadItem) {
+      uploadItem.isLocked = item.isLocked;
+      localStorage.setItem('vi_uploads', JSON.stringify(existingUploads));
+    }
+  } catch (e) {}
+
   renderGallery();
   updateMetrics();
   if (AppState.lightbox.isOpen) {
     updateLightboxContent();
+    renderLightboxFilmstrip();
   }
 }
 
@@ -1146,6 +1628,12 @@ function closeLightbox() {
   AppState.lightbox.isOpen = false;
   DOM.lightboxModal.classList.remove('active');
   document.body.style.overflow = '';
+  const lightboxVideo = document.getElementById('lightboxVideo');
+  if (lightboxVideo) {
+    lightboxVideo.pause();
+    lightboxVideo.src = '';
+    lightboxVideo.style.display = 'none';
+  }
 }
 
 function nextLightbox() {
@@ -1167,14 +1655,29 @@ function updateLightboxContent() {
   const item = items[AppState.lightbox.currentIndex];
   if (!item) return;
 
-  // Smooth crossfade on image transition
-  DOM.lightboxImage.style.opacity = '0';
-  DOM.lightboxImage.src = item.src;
-  DOM.lightboxImage.alt = item.title;
-  applyTransform();
-  requestAnimationFrame(() => {
-    DOM.lightboxImage.style.opacity = '1';
-  });
+  const lightboxVideo = document.getElementById('lightboxVideo');
+  if (item.isVideo) {
+    DOM.lightboxImage.style.display = 'none';
+    if (lightboxVideo) {
+      lightboxVideo.style.display = 'block';
+      lightboxVideo.src = item.src;
+      lightboxVideo.play().catch(() => {});
+    }
+  } else {
+    if (lightboxVideo) {
+      lightboxVideo.pause();
+      lightboxVideo.src = '';
+      lightboxVideo.style.display = 'none';
+    }
+    DOM.lightboxImage.style.display = 'block';
+    DOM.lightboxImage.style.opacity = '0';
+    DOM.lightboxImage.src = item.src;
+    DOM.lightboxImage.alt = item.title;
+    applyTransform();
+    requestAnimationFrame(() => {
+      DOM.lightboxImage.style.opacity = '1';
+    });
+  }
 
   DOM.lightboxTitle.textContent = item.title;
   if (item.category === 'members' && item.roll) {
@@ -1554,7 +2057,7 @@ function bindEventListeners() {
     });
   }
 
-  // View Mode Switcher (Grid / Bento / Compact)
+  // View Mode Switcher (Smart / Grid / Bento / Compact)
   DOM.viewButtons.forEach(btn => {
     btn.addEventListener('click', () => {
       DOM.viewButtons.forEach(b => b.classList.remove('active'));
@@ -1564,25 +2067,62 @@ function bindEventListeners() {
       localStorage.setItem('vi_view_mode', view);
 
       DOM.galleryGrid.className = 'gallery-grid';
+      if (view === 'smart') DOM.galleryGrid.classList.add('view-smart');
       if (view === 'bento') DOM.galleryGrid.classList.add('view-bento');
       if (view === 'compact') DOM.galleryGrid.classList.add('view-compact');
       showToast(`Switched to ${view.toUpperCase()} Layout`);
     });
   });
 
-  // Theme Toggle (Animated Switch and Legacy Button)
+  // Theme Toggle (Instantaneous, Lag-Free)
   if (DOM.darkmodeToggle) {
     DOM.darkmodeToggle.addEventListener('change', (e) => {
-      const newTheme = e.target.checked ? 'dark' : 'light';
+      const isDark = e.target.checked;
+      const newTheme = isDark ? 'dark' : 'light';
       AppState.theme = newTheme;
       document.documentElement.setAttribute('data-theme', newTheme);
       localStorage.setItem('vi_theme', newTheme);
-      updateThemeIcon();
+      if (DOM.themeIcon) {
+        DOM.themeIcon.textContent = isDark ? 'light_mode' : 'dark_mode';
+      }
     });
   }
   if (DOM.themeToggleBtn) {
     DOM.themeToggleBtn.addEventListener('click', toggleTheme);
   }
+
+  // Highlights & Ambient Audio Controls
+  const ambientAudioBtn = document.getElementById('ambientAudioBtn');
+  if (ambientAudioBtn) {
+    ambientAudioBtn.addEventListener('click', () => AmbientAudio.toggle());
+  }
+
+  const track = document.getElementById('highlightsTrack');
+  const prevBtn = document.getElementById('highlightsPrevBtn');
+  const nextBtn = document.getElementById('highlightsNextBtn');
+  if (prevBtn && track) {
+    prevBtn.addEventListener('click', () => {
+      track.scrollBy({ left: -260, behavior: 'smooth' });
+    });
+  }
+  if (nextBtn && track) {
+    nextBtn.addEventListener('click', () => {
+      track.scrollBy({ left: 260, behavior: 'smooth' });
+    });
+  }
+
+  // Story Viewer Controls
+  const storyTapPrev = document.getElementById('storyTapPrev');
+  const storyTapNext = document.getElementById('storyTapNext');
+  const storyPlayPauseBtn = document.getElementById('storyPlayPauseBtn');
+  const storyAudioToggleBtn = document.getElementById('storyAudioToggleBtn');
+  const closeStoryBtn = document.getElementById('closeStoryBtn');
+
+  if (storyTapPrev) storyTapPrev.addEventListener('click', () => StoryViewer.prev());
+  if (storyTapNext) storyTapNext.addEventListener('click', () => StoryViewer.next());
+  if (storyPlayPauseBtn) storyPlayPauseBtn.addEventListener('click', () => StoryViewer.togglePlayPause());
+  if (storyAudioToggleBtn) storyAudioToggleBtn.addEventListener('click', () => AmbientAudio.toggle());
+  if (closeStoryBtn) closeStoryBtn.addEventListener('click', () => StoryViewer.close());
 
   // Lightbox Modal Controls
   if (DOM.closeLightboxBtn) DOM.closeLightboxBtn.addEventListener('click', closeLightbox);
@@ -1606,8 +2146,20 @@ function bindEventListeners() {
     });
   }
 
-  // Keyboard Navigation for Lightbox
+  // Keyboard Navigation for Lightbox & Story Viewer
   window.addEventListener('keydown', (e) => {
+    if (DOM.securityModal && DOM.securityModal.classList.contains('active')) {
+      if (e.key === 'Escape') {
+        closeSecurityModal();
+        return;
+      }
+    }
+    if (StoryViewer.isOpen) {
+      if (e.key === 'Escape') StoryViewer.close();
+      else if (e.key === 'ArrowRight' || e.key === ' ') StoryViewer.next();
+      else if (e.key === 'ArrowLeft') StoryViewer.prev();
+      return;
+    }
     if (!AppState.lightbox.isOpen) return;
     if (e.key === 'Escape') closeLightbox();
     else if (e.key === 'ArrowRight') nextLightbox();
@@ -1697,6 +2249,13 @@ function bindEventListeners() {
   // Security Modal Handlers
   if (DOM.securityForm) DOM.securityForm.addEventListener('submit', verifySecurityPassword);
   if (DOM.cancelSecurityBtn) DOM.cancelSecurityBtn.addEventListener('click', closeSecurityModal);
+  if (DOM.securityModal) {
+    DOM.securityModal.addEventListener('click', (e) => {
+      if (e.target === DOM.securityModal) {
+        closeSecurityModal();
+      }
+    });
+  }
 
   // Toggle Password Visibility
   if (DOM.togglePasswordVisibility && DOM.securityPasswordInput && DOM.togglePasswordIcon) {

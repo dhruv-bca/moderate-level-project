@@ -174,6 +174,45 @@
       </div>
     </section>
 
+    <!-- Memories & Highlights Carousel (Google Photos Style with Background Audio) -->
+    <section class="highlights-section glass-panel" aria-label="Memories and Highlights">
+      <div class="highlights-header">
+        <div class="highlights-title-group">
+          <span class="material-symbols-outlined highlights-icon">auto_awesome</span>
+          <div>
+            <h2 class="highlights-title">Highlights & Memories</h2>
+            <span class="highlights-subtitle">Curated moments, championships & spotlights</span>
+          </div>
+        </div>
+
+        <div class="highlights-controls">
+          <!-- Background Ambient Audio Soundscape Toggle -->
+          <button class="btn-chrome btn-audio-toggle" id="ambientAudioBtn" type="button" title="Toggle Calm Ambient Background Sound">
+            <span class="material-symbols-outlined" id="audioIcon">volume_up</span>
+            <span class="audio-wave-anim" id="audioWave" aria-hidden="true">
+              <span></span><span></span><span></span><span></span>
+            </span>
+            <span class="btn-label" id="audioStatusText">Ambient Sound</span>
+          </button>
+
+          <!-- Horizontal Carousel Navigation Arrows -->
+          <div class="highlights-arrows">
+            <button class="arrow-btn" id="highlightsPrevBtn" type="button" title="Scroll Memories Left" aria-label="Previous memories">
+              <span class="material-symbols-outlined">chevron_left</span>
+            </button>
+            <button class="arrow-btn" id="highlightsNextBtn" type="button" title="Scroll Memories Right" aria-label="Next memories">
+              <span class="material-symbols-outlined">chevron_right</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Horizontal Scrollable Memory Track -->
+      <div class="highlights-track" id="highlightsTrack" role="region" aria-label="Highlights Reel">
+        <!-- Rendered dynamically by script.js -->
+      </div>
+    </section>
+
     <!-- Interactive Filters & View Configuration Bar -->
     <section class="gallery-controls-bar">
       <!-- Horizontal Filter Pills Reel -->
@@ -187,19 +226,19 @@
         <button class="filter-btn" data-filter="members" type="button" role="tab">
           <span class="material-symbols-outlined" style="font-size: 17px; color: var(--accent-cyan);">groups</span>
           Innovators Squad
-          <span class="filter-count">16</span>
+          <span class="filter-count">18</span>
         </button>
 
         <button class="filter-btn" data-filter="trophies" type="button" role="tab">
           <span class="material-symbols-outlined" style="font-size: 17px; color: #fbbf24;">emoji_events</span>
           Trophies & Awards
-          <span class="filter-count">13</span>
+          <span class="filter-count">11</span>
         </button>
 
         <button class="filter-btn" data-filter="events" type="button" role="tab">
           <span class="material-symbols-outlined" style="font-size: 17px;">celebration</span>
           Campus & Events
-          <span class="filter-count">11</span>
+          <span class="filter-count">12</span>
         </button>
 
         <button class="filter-btn" data-filter="hd" type="button" role="tab">
@@ -218,7 +257,7 @@
         <button class="filter-btn locked-tab" data-filter="locked" type="button" role="tab" id="lockedVaultFilterBtn" title="Password Protected (innovators)">
           <span class="material-symbols-outlined" style="font-size: 17px; color: #fb7185;" id="lockedVaultTabIcon">lock</span>
           Locked Vault
-          <span class="filter-count" id="lockedVaultCount">0</span>
+          <span class="filter-count" id="lockedVaultCount">2</span>
         </button>
       </div>
 
@@ -235,9 +274,12 @@
           <span class="material-symbols-outlined">expand_more</span>
         </div>
 
-        <!-- View Density Switcher -->
+        <!-- View Density Switcher with Smart Google Photos Mode -->
         <div class="view-switcher" role="group" aria-label="Grid layout density">
-          <button class="view-btn active" data-view="grid" title="Standard Grid Layout">
+          <button class="view-btn active" data-view="smart" title="Smart Fit (Google Photos Zero Gaps)">
+            <span class="material-symbols-outlined">auto_awesome_mosaic</span>
+          </button>
+          <button class="view-btn" data-view="grid" title="Standard Grid Layout">
             <span class="material-symbols-outlined">grid_view</span>
           </button>
           <button class="view-btn" data-view="bento" title="Bento Dynamic Layout">
@@ -251,7 +293,7 @@
     </section>
 
     <!-- Image Gallery Dynamic Grid -->
-    <section class="gallery-grid" id="galleryGrid" aria-live="polite">
+    <section class="gallery-grid view-smart" id="galleryGrid" aria-live="polite">
       <!-- Rendered dynamically by script.js -->
     </section>
 
@@ -289,6 +331,7 @@
 
       <div class="lightbox-image-container">
         <img class="lightbox-image" id="lightboxImage" src="" alt="Active preview image">
+        <video class="lightbox-video" id="lightboxVideo" controls playsinline style="display: none; max-width: 90vw; max-height: 80vh; border-radius: var(--radius-sm); outline: none; box-shadow: 0 20px 50px rgba(0,0,0,0.8);"></video>
       </div>
 
       <button class="nav-arrow-btn nav-next" id="nextArrowBtn" type="button" title="Next Image (Right Arrow)" aria-label="Next image">
@@ -514,6 +557,52 @@
           </button>
         </div>
       </form>
+    </div>
+  </div>
+
+  <!-- Highlight Story Viewer Modal (Google Photos Memories Style) -->
+  <div class="story-viewer-modal" id="storyViewerModal" role="dialog" aria-modal="true" aria-label="Story Memories Player">
+    <div class="story-backdrop"></div>
+    <div class="story-container">
+      <!-- Story Segments Progress Bars -->
+      <div class="story-progress-bar-container" id="storyProgressContainer"></div>
+
+      <!-- Top Story Header -->
+      <div class="story-header">
+        <div class="story-user-badge">
+          <img src="./images/logo.png" alt="Logo" class="story-avatar">
+          <div class="story-title-wrap">
+            <span class="story-tag" id="storyTag">Highlights</span>
+            <span class="story-title" id="storyTitle">Memory Spotlight</span>
+          </div>
+        </div>
+        <div class="story-controls">
+          <button class="story-ctrl-btn" id="storyPlayPauseBtn" type="button" title="Play / Pause Story">
+            <span class="material-symbols-outlined" id="storyPlayPauseIcon">pause</span>
+          </button>
+          <button class="story-ctrl-btn" id="storyAudioToggleBtn" type="button" title="Toggle Ambient Audio">
+            <span class="material-symbols-outlined" id="storyAudioIcon">volume_up</span>
+          </button>
+          <button class="story-ctrl-btn" id="closeStoryBtn" type="button" title="Close Story (Esc)">
+            <span class="material-symbols-outlined">close</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Story Media Stage -->
+      <div class="story-stage" id="storyStage">
+        <img class="story-media story-image" id="storyImage" src="" alt="Story Memory">
+        <video class="story-media story-video" id="storyVideo" playsinline loop muted style="display: none;"></video>
+        <!-- Tap zones for mobile / desktop story navigation -->
+        <div class="story-tap-zone story-tap-prev" id="storyTapPrev" title="Previous Story"></div>
+        <div class="story-tap-zone story-tap-next" id="storyTapNext" title="Next Story"></div>
+      </div>
+
+      <!-- Bottom Story Caption Overlay -->
+      <div class="story-caption" id="storyCaption">
+        <h3 id="storyCaptionTitle">Spotlight</h3>
+        <p id="storyCaptionDesc"></p>
+      </div>
     </div>
   </div>
 

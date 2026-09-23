@@ -602,7 +602,7 @@ a {
   box-shadow: inset 0px 1px 3px rgba(0, 0, 0, 0.4),
               inset 0px -1px 3px rgba(255, 255, 255, 0.4);
   cursor: pointer;
-  transition: 0.3s;
+  transition: background 0.18s ease-out;
   box-sizing: border-box;
 }
 
@@ -616,16 +616,20 @@ a {
   background: linear-gradient(180deg, #ffcc89, #d8860b);
   border-radius: 20px;
   box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.25);
-  transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: translateX(0);
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), background 0.2s ease-out;
+  will-change: transform;
 }
 
-.theme-switch-container label[for="darkmode-toggle"] svg {
+.theme-switch-container label[for="darkmode-toggle"] svg,
+.theme-switch-container label[for="darkmode-toggle"] svg * {
   position: absolute;
   width: 14px;
   height: 14px;
   top: 6px;
   z-index: 10;
-  transition: 0.3s;
+  pointer-events: none;
+  transition: fill 0.18s ease-out;
 }
 
 .theme-switch-container label[for="darkmode-toggle"] svg.sun {
@@ -646,8 +650,7 @@ a {
 }
 
 .theme-switch-container input#darkmode-toggle:checked + label[for="darkmode-toggle"]:after {
-  left: calc(100% - 3px);
-  transform: translateX(-100%);
+  transform: translateX(32px);
   background: linear-gradient(180deg, #777, #3a3a3a);
 }
 
@@ -657,11 +660,6 @@ a {
 
 .theme-switch-container input#darkmode-toggle:checked + label[for="darkmode-toggle"] svg.moon {
   fill: #fff;
-}
-
-/* Active Squashing / Stretch Effect */
-.theme-switch-container input#darkmode-toggle:active + label[for="darkmode-toggle"]:after {
-  width: 27px;
 }
 
 /* Camera Option & Stream Viewfinder Styles */
@@ -1042,6 +1040,467 @@ a {
 .gallery-grid.view-compact {
   grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
   gap: 0.75rem;
+}
+
+/* Google Photos Smart Justified Stream Mode (Zero Empty Spaces) */
+.gallery-grid.view-smart {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.gallery-grid.view-smart::after {
+  content: '';
+  flex-grow: 99999999;
+  height: 0;
+  min-width: 220px;
+}
+
+.gallery-grid.view-smart .gallery-card {
+  height: 250px;
+  flex-grow: calc(var(--aspect, 0.7) * 100);
+  flex-basis: calc(250px * var(--aspect, 0.7));
+  max-width: 100%;
+  aspect-ratio: auto !important;
+}
+
+/* Video Card & Indicator Styles */
+.card-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.video-play-indicator {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: var(--radius-pill);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  z-index: 5;
+  pointer-events: none;
+}
+
+/* --------------------------------------------------------------------------
+   Highlights & Memories Carousel (Image 3 Inspiration)
+   -------------------------------------------------------------------------- */
+.highlights-section {
+  margin-bottom: 1.5rem;
+  padding: 1.1rem 1.25rem;
+  border-radius: var(--radius-lg);
+  position: relative;
+  overflow: hidden;
+}
+
+.highlights-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.85rem;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.highlights-title-group {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.highlights-icon {
+  font-size: 24px;
+  color: var(--accent-cyan);
+  background: var(--accent-cyan-soft);
+  padding: 6px;
+  border-radius: 50%;
+}
+
+.highlights-title {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--chrome-primary);
+  line-height: 1.2;
+}
+
+.highlights-subtitle {
+  font-size: 0.75rem;
+  color: var(--chrome-muted);
+}
+
+.highlights-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+/* Ambient Audio Button & Animated Wave */
+.btn-audio-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.45rem 0.85rem;
+  border-radius: var(--radius-pill);
+  font-size: 0.8rem;
+  font-weight: 600;
+  background: var(--bg-surface-glass);
+  border: 1px solid var(--chrome-border);
+  color: var(--chrome-primary);
+  transition: all var(--transition-fast);
+}
+
+.btn-audio-toggle.active {
+  background: var(--accent-cyan-soft);
+  border-color: var(--accent-cyan);
+  color: var(--accent-cyan);
+}
+
+.audio-wave-anim {
+  display: none;
+  align-items: flex-end;
+  gap: 2px;
+  height: 14px;
+  width: 14px;
+}
+
+.btn-audio-toggle.active .audio-wave-anim {
+  display: inline-flex;
+}
+
+.audio-wave-anim span {
+  display: block;
+  width: 2px;
+  height: 100%;
+  background: currentColor;
+  border-radius: 1px;
+  animation: audioWaveBar 1.2s ease-in-out infinite;
+}
+
+.audio-wave-anim span:nth-child(1) { animation-delay: 0s; height: 40%; }
+.audio-wave-anim span:nth-child(2) { animation-delay: 0.2s; height: 90%; }
+.audio-wave-anim span:nth-child(3) { animation-delay: 0.4s; height: 60%; }
+.audio-wave-anim span:nth-child(4) { animation-delay: 0.6s; height: 100%; }
+
+@keyframes audioWaveBar {
+  0%, 100% { transform: scaleY(0.3); }
+  50% { transform: scaleY(1); }
+}
+
+.highlights-arrows {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.arrow-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #0284c7;
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(2, 132, 199, 0.4);
+  transition: transform var(--transition-fast), background var(--transition-fast);
+}
+
+.arrow-btn:hover {
+  transform: scale(1.08);
+  background: #0369a1;
+}
+
+.highlights-track {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  scroll-snap-type: x mandatory;
+  padding: 0.25rem 0.15rem 0.5rem;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.highlights-track::-webkit-scrollbar {
+  display: none;
+}
+
+/* Individual Highlight Memory Card (Matches Image 3) */
+.highlight-card {
+  flex: 0 0 215px;
+  height: 125px;
+  border-radius: var(--radius-md);
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  scroll-snap-align: start;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: 0 8px 20px -6px rgba(0, 0, 0, 0.5);
+  transform: translateZ(0);
+  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.22s ease-out, border-color 0.22s ease-out;
+}
+
+.highlight-card:hover {
+  transform: translateY(-3px) scale(1.02);
+  border-color: var(--accent-cyan);
+  box-shadow: 0 12px 28px -6px rgba(2, 132, 199, 0.35);
+}
+
+.highlight-card img,
+.highlight-card video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.highlight-card-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.35) 45%, rgba(0, 0, 0, 0.88) 100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 0.65rem 0.75rem;
+  pointer-events: none;
+}
+
+.highlight-card-title {
+  color: #ffffff;
+  font-family: var(--font-display);
+  font-size: 0.82rem;
+  font-weight: 600;
+  line-height: 1.25;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.highlight-card-tag {
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 0.68rem;
+  margin-top: 2px;
+}
+
+.highlight-play-badge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+/* --------------------------------------------------------------------------
+   Story Viewer Modal (Google Photos Memories Style)
+   -------------------------------------------------------------------------- */
+.story-viewer-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  background: rgba(0, 0, 0, 0.94);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+
+.story-viewer-modal.active {
+  display: flex;
+}
+
+.story-backdrop {
+  position: absolute;
+  inset: 0;
+}
+
+.story-container {
+  position: relative;
+  width: 100%;
+  max-width: 440px;
+  height: 92vh;
+  max-height: 820px;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: #000;
+  box-shadow: 0 25px 60px -10px rgba(0, 0, 0, 0.9);
+  display: flex;
+  flex-direction: column;
+  z-index: 5;
+}
+
+.story-progress-bar-container {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  right: 10px;
+  z-index: 20;
+  display: flex;
+  gap: 5px;
+}
+
+.story-progress-segment {
+  flex: 1;
+  height: 3px;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 3px;
+  overflow: hidden;
+  position: relative;
+}
+
+.story-progress-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 0%;
+  background: #fff;
+  transition: width 0.05s linear;
+}
+
+.story-progress-segment.completed .story-progress-fill {
+  width: 100% !important;
+}
+
+.story-header {
+  position: absolute;
+  top: 22px;
+  left: 12px;
+  right: 12px;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: #fff;
+}
+
+.story-user-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.story-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1.5px solid var(--accent-cyan);
+  object-fit: cover;
+}
+
+.story-title-wrap {
+  display: flex;
+  flex-direction: column;
+}
+
+.story-tag {
+  font-size: 0.68rem;
+  color: var(--accent-cyan);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.story-title {
+  font-size: 0.85rem;
+  font-weight: 600;
+  white-space: nowrap;
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.story-controls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.story-ctrl-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.5);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: background var(--transition-fast);
+}
+
+.story-ctrl-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.story-stage {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  background: #050505;
+}
+
+.story-media {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.story-tap-zone {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 38%;
+  z-index: 10;
+  cursor: pointer;
+}
+
+.story-tap-prev { left: 0; }
+.story-tap-next { right: 0; width: 62%; }
+
+.story-caption {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 20;
+  padding: 1.25rem 1rem 1rem;
+  background: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.85) 60%, rgba(0, 0, 0, 0.98) 100%);
+  color: #fff;
+}
+
+.story-caption h3 {
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+}
+
+.story-caption p {
+  font-size: 0.8rem;
+  color: var(--chrome-secondary);
+  line-height: 1.35;
 }
 
 .gallery-grid.view-compact .gallery-card {
@@ -1966,15 +2425,32 @@ a {
   }
 
   /* Distinct Grid Layouts in Android / Mobile View (Zero Blank Spaces) */
+  /* 0. Smart Google Photos: Justified packing with 160px rows */
+  .gallery-grid.view-smart {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .gallery-grid.view-smart .gallery-card {
+    height: 160px;
+    flex-basis: calc(160px * var(--aspect, 0.7));
+  }
+  .gallery-grid.view-smart .card-details {
+    padding: 0.5rem 0.6rem;
+  }
+  .gallery-grid.view-smart .card-title {
+    font-size: 0.82rem;
+  }
+
   /* 1. Standard: 1 column full showcase */
-  .gallery-grid:not(.view-bento):not(.view-compact) {
+  .gallery-grid:not(.view-smart):not(.view-bento):not(.view-compact) {
     grid-template-columns: 1fr;
     gap: 1rem;
   }
-  .gallery-grid:not(.view-bento):not(.view-compact) .gallery-card.aspect-portrait {
+  .gallery-grid:not(.view-smart):not(.view-bento):not(.view-compact) .gallery-card.aspect-portrait {
     aspect-ratio: 9 / 14;
   }
-  .gallery-grid:not(.view-bento):not(.view-compact) .gallery-card.aspect-wide {
+  .gallery-grid:not(.view-smart):not(.view-bento):not(.view-compact) .gallery-card.aspect-wide {
     aspect-ratio: 16 / 9;
   }
 

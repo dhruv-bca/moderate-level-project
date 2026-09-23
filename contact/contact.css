@@ -883,3 +883,95 @@
     justify-content: center;
   }
 }
+
+/* --------------------------------------------------------------------------
+   Campus Geolocation & Interactive Map Section
+   -------------------------------------------------------------------------- */
+.campus-map-card {
+  margin-top: 2rem;
+  padding: 2rem;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--chrome-border-highlight);
+  background: var(--bg-surface-elevated);
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.campus-map-header {
+  text-align: left;
+}
+
+.campus-map-title {
+  font-family: var(--font-heading);
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--chrome-primary);
+  margin-bottom: 0.35rem;
+}
+
+.campus-map-subtitle {
+  font-size: 0.92rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.campus-map-frame-box {
+  width: 100%;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  border: 1px solid var(--chrome-border);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+  background: #000;
+}
+
+.campus-map-frame-box iframe {
+  display: block;
+  width: 100%;
+  min-height: 380px;
+}
+
+.campus-map-footer {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.btn-map-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.4rem;
+  border-radius: var(--radius-sm);
+  background: linear-gradient(135deg, rgba(0, 210, 255, 0.2), rgba(2, 132, 199, 0.35));
+  border: 1px solid var(--accent-cyan);
+  color: var(--text-primary);
+  font-family: var(--font-heading);
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all var(--transition-fast);
+  box-shadow: 0 4px 15px var(--accent-cyan-glow);
+}
+
+.btn-map-action:hover {
+  background: var(--accent-cyan);
+  color: #000;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 210, 255, 0.5);
+}
+
+@media (max-width: 768px) {
+  .campus-map-card {
+    padding: 1.25rem;
+  }
+  .campus-map-frame-box iframe {
+    min-height: 300px;
+  }
+  .campus-map-footer {
+    justify-content: stretch;
+  }
+  .btn-map-action {
+    width: 100%;
+    justify-content: center;
+  }
+}
